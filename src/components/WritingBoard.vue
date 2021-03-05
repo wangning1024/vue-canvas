@@ -30,21 +30,21 @@
                 isDown: false,
                 startTime: null,
                 startX: 0,
-                startY:0,
-            }
+                startY: 0,
+                winW: 0,
+                winH: 0,
+            };
         },
         methods: {
             initCanvas() {
                 this.canvas = document.getElementById('canvas');
                 this.ctx = this.canvas.getContext('2d');
-
                 this.ctx.lineCap = 'round';
-                this.ctx.lineJoin = 'round';
-
-                let winW = window.innerWidth;
-                let winH = window.innerHeight;
-                this.canvas.width = winW - 10;
-                this.canvas.height = winH - 100;
+                // this.ctx.lineJoin = 'round';
+                // this.winW = window.innerWidth - 10;
+                // this.winH = window.innerHeight - 100;
+                this.canvas.width = this.winW;
+                this.canvas.height = this.winH;
 
             },
             windowToCanvas(canvas, x, y) {
@@ -134,10 +134,15 @@
 
             mouseUp(ev) {
                 ev.preventDefault();
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.startX, this.startY);
+                this.ctx.lineTo(this.startX + 1, this.startY + 2);
+                this.ctx.lineWidth = 3.5;
+                this.ctx.stroke();
                 this.isDown = false;
             },
             clear() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.clearRect(0, 0, this.winW, this.winH);
                 this.isDown = false;
                 this.startTime = null;
                 let imageElement = document.getElementById('wbImageElement');
@@ -154,7 +159,13 @@
             }
         },
         mounted() {
+            // this.winW = window.innerWidth - 10;
+            // this.winH = window.innerHeight - 100;
+            this.winW = document.body.clientWidth - 50;
+            this.winH = 500;
+
             this.initCanvas();
+
         }
     };
 </script>
@@ -163,7 +174,13 @@
 
   .writing-board {
     /*margin: 0 50px;*/
-    border: 1px black solid;
+    /*border: 1px black solid;*/
+    border: thin solid #aaaaaa;
+    -webkit-box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+    -moz-box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+  }
+  #canvas {
 
   }
 
@@ -171,7 +188,7 @@
     /*border: 1px black solid;*/
   }
   .button {
-    margin: 10px auto;
+    margin: 20px auto;
     width: 140px;
   }
   .button button {
